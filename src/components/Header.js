@@ -30,9 +30,9 @@ export default function Header() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
-            News
+            Questionnaire Generator
           </Typography>
-          <Button color="inherit">Login</Button>
+          <Button color="inherit">Export</Button>
         </Toolbar>
       </AppBar>
     </div>
