@@ -19,6 +19,38 @@ const defaultQuestion = {
   conditions: [],
 };
 
+const removeDoubleQuotes = st => {
+  return st.replace('“', '')
+    .replace('”', '')
+    .replace('"', '')
+    .replace('"', '')
+    .trim();
+}
+
+// TODO Match background icons
+/*
+  Background Icons: ( icons folder )
+  cancer-research
+  clock-brain-pills
+  doctor-book-kit
+  globe
+  medical-profile
+  medical-report
+  molecular
+  plane-hospital-pills
+  treatment
+  user
+*/
+
+// TODO Match type like
+/*
+  Question Types:
+  date picker
+  radio buttons (single select)
+  multi checkboxes (multiple selects)
+  drop down (single select)
+  number input
+*/
 export const formatQuestions = data => {
   const lines = data
     .split('\n')
@@ -35,7 +67,7 @@ export const formatQuestions = data => {
   for (const line of lines) {
     const qMatchRegex = /^q\d+[\w]*/i;
     const matchTitle = line.trim().match(qMatchRegex);
-    const matchSubTitle = /^Subhead:(.{0,})/ig.exec(line);
+    const matchSubTitle = /^(?:Subhead|subtitle):(.{0,})/ig.exec(line);
     const matchVar = /^var:(.{0,})/ig.exec(line);
     const matchIcon = /^icon:(.{0,})/ig.exec(line);
     // const matchOptions = /^option/ig.exec(line);
@@ -88,21 +120,23 @@ export const formatQuestions = data => {
         .replace(/^-/, '')
         .trim()
         .replace(/\(show\)/i, '')
-        .replace(/\(hidden\)/i, '');
+        .replace(/\(hidden\)/i, '')
+        .trim();
     } else if (matchSubTitle) {
-      question.subtitle = matchSubTitle[1].trim().replace('(hidden)', '')
+      const subtitle = matchSubTitle[1].trim().replace('(hidden)', '')
+      question.subtitle = question.subtitle.length
+        ? question.subtitle + ' ' + subtitle
+        : subtitle;
     } else if (matchVar) {
-      // console.log('matchVar', matchVar)
-      // question.id = matchVar[1].trim();
-      question.id = matchVar[1].trim().replace(/^“/i, '').replace(/”$/i, '');
+      question.id = `ID.${removeDoubleQuotes(matchVar[1].trim())}`;
     } else if (matchIcon) {
-      question.bgIcon = matchIcon[1].trim();
+      question.bgIcon = `i.${matchIcon[1].trim()}`;
     } else if (matchLabel) {
       options.push({
-        label: matchLabel[1].trim().replace('“', '').replace('”', '')
+        label: removeDoubleQuotes(matchLabel[1].trim())
       })
     } else if (matchValue) {
-      const value = matchValue[1].trim().replace('“', '').replace('”', '');
+      const value = removeDoubleQuotes(matchValue[1].trim());
       options = options.map((option, i, array) => {
         if (i === array.length - 1) {
           return {
