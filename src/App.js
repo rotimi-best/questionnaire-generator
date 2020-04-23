@@ -6,8 +6,11 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
+import Fab from '@material-ui/core/Fab';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import EnumGenerator from './components/EnumGenerator';
 import QuestionnaireGenerator from './components/QuestionnaireGenerator';
+import ScrollTop from './components/ScrollTop';
 import './App.css';
 
 function TabPanel(props) {
@@ -57,7 +60,7 @@ export default function SimpleTabs() {
 
   return (
     <div className={classes.root}>
-      <AppBar position="static">
+      <AppBar position="static" id="back-to-top-anchor">
         <Tabs
           value={value}
           onChange={handleChange}
@@ -79,6 +82,11 @@ export default function SimpleTabs() {
       {/* <TabPanel value={value} index={2}>
         Item Three
       </TabPanel> */}
+      <ScrollTop>
+        <Fab color="secondary" size="small" aria-label="scroll back to top">
+          <KeyboardArrowUpIcon />
+        </Fab>
+      </ScrollTop>
     </div>
   );
 }

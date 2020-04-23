@@ -87,20 +87,22 @@ export const formatQuestions = data => {
         .trim()
         .replace(/^-/, '')
         .trim()
-        .replace(/\(show\)/i, '');
+        .replace(/\(show\)/i, '')
+        .replace(/\(hidden\)/i, '');
     } else if (matchSubTitle) {
       question.subtitle = matchSubTitle[1].trim().replace('(hidden)', '')
     } else if (matchVar) {
       // console.log('matchVar', matchVar)
-      question.id = matchVar[1].trim();
+      // question.id = matchVar[1].trim();
+      question.id = matchVar[1].trim().replace(/^“/i, '').replace(/”$/i, '');
     } else if (matchIcon) {
       question.bgIcon = matchIcon[1].trim();
     } else if (matchLabel) {
       options.push({
-        label: matchLabel[1].trim().replace('"', '').replace('"', '')
+        label: matchLabel[1].trim().replace('“', '').replace('”', '')
       })
     } else if (matchValue) {
-      const value = matchValue[1].trim().replace('"', '').replace('"', '');
+      const value = matchValue[1].trim().replace('“', '').replace('”', '');
       options = options.map((option, i, array) => {
         if (i === array.length - 1) {
           return {
